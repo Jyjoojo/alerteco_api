@@ -25,10 +25,10 @@ def send_notification():
         custom_data = data.get('data', {})
 
         # Authentification
-        credentials = credentials = service_account.Credentials.from_service_account_file(
+        credentials = service_account.Credentials.from_service_account_file(
             SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-        request = google.auth.transport.requests.Request()
-        credentials.refresh(request)
+        google_request = google.auth.transport.requests.Request()
+        credentials.refresh(google_request)
         
         # Jeton d'accès
         access_token = credentials.token
