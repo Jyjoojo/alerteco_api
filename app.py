@@ -8,7 +8,7 @@ import google.auth.transport.requests
 app = Flask(__name__)
 
 # Chemin vers le fichier de compte de service (tu peux aussi utiliser une variable d'environnement)
-SERVICE_ACCOUNT_FILE = 'alerteco-firebase-adminsdk-fbsvc-f454679d70.json'
+SERVICE_ACCOUNT_FILE = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON'])
 SCOPES = ['https://www.googleapis.com/auth/firebase.messaging']
 
 @app.route('/')
@@ -25,9 +25,12 @@ def send_notification():
         custom_data = data.get('data', {})
 
         # Authentification
-        credentials = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON'])
-        request_auth = google.auth.transport.requests.Request()
-        credentials.refresh(request_auth)
+        credentials = credentials = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+        request = google.auth.transport.requests.Request()
+        credentials.refresh(request)
+        
+        # Jeton d'accès
         access_token = credentials.token
 
         # Message
