@@ -1,14 +1,22 @@
 import json
 import os
 import requests
+import tempfile
 from flask import Flask, request, jsonify
 from google.oauth2 import service_account
 import google.auth.transport.requests
 
 app = Flask(__name__)
 
+
+# Écrire le JSON dans un fichier temporaire
+credentials_dict = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON'])
+temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".json")
+temp_file.write(json.dumps(credentials_dict).encode())
+temp_file.close()
+
 # Chemin vers le fichier de compte de service (tu peux aussi utiliser une variable d'environnement)
-SERVICE_ACCOUNT_FILE = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON'])
+SERVICE_ACCOUNT_FILE = temp_file.name
 SCOPES = ['https://www.googleapis.com/auth/firebase.messaging']
 
 @app.route('/')
