@@ -24,8 +24,7 @@ def send_notification():
         custom_data = data.get('data', {})
 
         # Authentification
-        credentials = service_account.Credentials.from_service_account_file(
-            SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+        credentials_info = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON'])
         request_auth = google.auth.transport.requests.Request()
         credentials.refresh(request_auth)
         access_token = credentials.token
